@@ -1,0 +1,9 @@
+---
+# Variable configuration.
+- include_tasks: variables.yml
+
+# Install Moodle.
+- include_tasks: install.yml
+
+# Configure Moodle.
+- include_tasks: configure.yml

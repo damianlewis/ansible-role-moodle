@@ -1,0 +1,30 @@
+---
+- name: Define moodle_root_user
+  set_fact:
+    moodle_root_user: "{{ __moodle_root_user }}"
+  when: moodle_root_user is not defined
+
+- name: Define moodle_root_group
+  set_fact:
+    moodle_root_group: "{{ __moodle_root_group }}"
+  when: moodle_root_group is not defined
+
+- name: Define moodle_root_permissions
+  set_fact:
+    moodle_root_permissions: "{{ __moodle_root_permissions }}"
+  when: moodle_root_permissions is not defined
+
+- name: Define moodle_dataroot_user
+  set_fact:
+    moodle_dataroot_user: "{{ __moodle_dataroot_user }}"
+  when: moodle_dataroot_user is not defined
+
+- name: Define moodle_dataroot_group
+  set_fact:
+    moodle_dataroot_group: "{{ __moodle_dataroot_group }}"
+  when: moodle_dataroot_group is not defined
+
+- name: Define moodle_dataroot_permissions
+  set_fact:
+    moodle_dataroot_permissions: "{{ __moodle_dataroot_permissions }}"
+  when: moodle_dataroot_permissions is not defined

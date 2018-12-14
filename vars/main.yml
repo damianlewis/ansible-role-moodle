@@ -1,0 +1,11 @@
+---
+moodle_git_repository: git://git.moodle.org/moodle.git
+moodle_git_depth: '1'
+
+__moodle_root_user: root
+__moodle_root_group: root
+__moodle_root_permissions: '0755'
+
+__moodle_dataroot_user: www-data
+__moodle_dataroot_group: www-data
+__moodle_dataroot_permissions: '0777'

@@ -1,0 +1,85 @@
+---
+- name: Check if Moodle downloaded
+  stat:
+    path: "{{ moodle_root_path }}/version.php"
+  register: moodle_downloaded
+
+- name: Check if Moodle installed
+  stat:
+    path: "{{ moodle_root_path }}/config.php"
+  register: moodle_installed
+
+- name: Check if moodledata folder exists
+  stat:
+    path: "{{ moodle_dataroot_path }}"
+  register: moodle_dataroot_created
+
+- name: Download specfic Moodle version
+  git:
+    repo: "{{ moodle_git_repository }}"
+    dest: "{{ moodle_root_path }}"
+    version: "MOODLE_{{ moodle_version.split('.')[0] }}{{ moodle_version.split('.')[1] }}_STABLE"
+    depth: "{{ moodle_git_depth }}"
+  register: moodle_cloned
+  when:
+  - not moodle_downloaded.stat.exists
+  - moodle_version is defined
+
+- name: Download latest Moodle version
+  git:
+    repo: "{{ moodle_git_repository }}"
+    dest: "{{ moodle_root_path }}"
+    depth: "{{ moodle_git_depth }}"
+  register: moodle_cloned
+  when:
+  - not moodle_downloaded.stat.exists
+  - moodle_version is not defined
+
+- name: Secure Moodle directories and files
+  file:
+    path: "{{ moodle_root_path }}"
+    state: directory
+    recurse: yes
+    owner: "{{ moodle_root_user }}"
+    group: "{{ moodle_root_group }}"
+    mode: "{{ moodle_root_permissions }}"
+  when: moodle_cloned.changed
+
+- name: Secure Moodle regular files
+  shell: "find {{ moodle_root_path }} -type f -exec chmod 0644 {} \\;"
+  when: not moodle_installed.stat.exists
+  changed_when: moodle_cloned.changed
+
+- name: Create Moodle dataroot folder
+  file:
+    path: "{{ moodle_dataroot_path }}"
+    state: directory
+    owner: "{{ moodle_dataroot_user }}"
+    group: "{{ moodle_dataroot_group }}"
+    mode: "{{ moodle_dataroot_permissions }}"
+  when: not moodle_dataroot_created.stat.exists
+
+- name: Install Moodle
+  command: >
+    php install.php
+    --chmod="{{ moodle_dataroot_permissions }}"
+    --wwwroot="{{ moodle_wwwroot }}"
+    --dataroot="{{ moodle_dataroot_path }}"
+    --dbtype="{{ moodle_database_type | default('mysqli') }}"
+    --dbhost="{{ moodle_database_host | default('localhost') }}"
+    --dbname="{{ moodle_database_name | default('moodle') }}"
+    --dbuser="{{ moodle_database_user | default('root') }}"
+    --dbpass="{{ moodle_database_password }}"
+    --dbport="{{ moodle_database_port | default('3306') }}"
+    --prefix="{{ moodle_database_prefix | default('mdl_') }}"
+    --fullname="{{ moodle_fullname }}"
+    --shortname="{{ moodle_shortname }}"
+    --adminuser="{{ moodle_admin_username | default('admin') }}"
+    --adminpass="{{ moodle_admin_password }}"
+    --adminemail="{{ moodle_admin_email }}"
+    --non-interactive
+    --agree-license
+  args:
+    chdir: "{{ moodle_root_path }}/admin/cli"
+  when: not moodle_installed.stat.exists
+  changed_when: moodle_cloned.changed

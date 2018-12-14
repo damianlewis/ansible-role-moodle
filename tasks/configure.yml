@@ -1,0 +1,13 @@
+---
+- name: Enable debug mode
+  blockinfile:
+    path: "{{ moodle_root_path }}/config.php"
+    insertbefore: "require_once\\(__DIR__ \\. '/lib/setup\\.php'\\);"
+    marker: "# {mark} SETTINGS FOR DEVELOPMENT SERVERS"
+    state: "{{ moodle_enable_debug | ternary('present', 'absent') }}"
+    block: |
+      @error_reporting(E_ALL | E_STRICT);
+      @ini_set('display_errors', '1');
+      $CFG->debug = (E_ALL | E_STRICT);
+      $CFG->debugdisplay = 1;
+      $CFG->themedesignermode = true;
