@@ -1,5 +1,5 @@
 galaxy_info:
-  role_name: Moodle
+  role_name: moodle
   author: Damian Lewis
   description: Installs and configures Moodle
   license: BSD
