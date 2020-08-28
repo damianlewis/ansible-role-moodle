@@ -78,6 +78,11 @@ moodle_enable_debug: true
 ```
 By default, debug mode is off for Moodle. To enable debug mode use the set the `moodle_enable_debug` variable to `true`.
 
+```yaml
+launch_install: false
+```
+By defaut, this role launches the cli installation, you may not want to launch it, in this case set the `launch_install` variable to false
+
 ## Dependencies
 None.
 
