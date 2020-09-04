@@ -81,5 +81,5 @@
     --agree-license
   args:
     chdir: "{{ moodle_root_path }}/admin/cli"
-  when: not moodle_installed.stat.exists and launch_install is true
+  when: not (moodle_installed.stat.exists) and (launch_installation == true)
   changed_when: moodle_cloned.changed
