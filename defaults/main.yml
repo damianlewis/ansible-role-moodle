@@ -1,2 +1,3 @@
 ---
 moodle_enable_debug: false
+launch_installation: true
