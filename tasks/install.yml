@@ -18,7 +18,7 @@
   git:
     repo: "{{ moodle_git_repository }}"
     dest: "{{ moodle_root_path }}"
-    version: "MOODLE_{{ moodle_version.split('.')[0] }}{{ moodle_version.split('.')[1] }}_STABLE"
+    version: "MOODLE_{{ moodle_version.split('.') | join('') }}_STABLE"
     depth: "{{ moodle_git_depth }}"
   register: moodle_cloned
   when:
